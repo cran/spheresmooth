@@ -55,3 +55,19 @@ The BIC (Bayesian Information Criterion) value is calculated according to the mo
 The function constructs piecewise curves using the piecewise_geodesic function and employs penalty terms to control the complexity of the model by updating control points and knots.
 To see how to use the function in practical applications, refer to the README or https://github.com/kybak90/spheresmooth.
 }
+\examples{
+apw_cartesian = spherical_to_cartesian(apw_spherical[, 2:3])
+t = apw_spherical[, 1]
+dimension = 3
+initial_knots = knots_quantile(t, dimension = dimension)
+lambda_seq = exp(seq(log(1e-04), log(1), length = 3))
+fit = penalized_linear_spherical_spline(t = t, y = apw_cartesian,
+                                        dimension = dimension,
+                                        initial_knots = initial_knots,
+                                        lambdas = lambda_seq)
+# choose a curve that minimizes the BIC
+best_index = which.min(fit$bic_list)
+best_index
+# obtained control points for the piecewise geodesic curve
+fit[[best_index]]$control_points
+}
